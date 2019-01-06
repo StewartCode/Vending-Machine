@@ -200,7 +200,7 @@ public class App {
 
         answer1.equalsIgnoreCase("y");
             if(counterEnd < 1){
-                System.out.println("you have " + round(y.bank.cashCounter, 2) + " in the machine");
+                System.out.println("you have £" + round(y.bank.cashCounter, 2) + " in the machine");
             }
             if(x.getCash() > -0.01){
                 if(answer1.equalsIgnoreCase("n")){
@@ -235,7 +235,8 @@ public class App {
         System.out.println("C4 " + y.c4.itemName() + " " + y.c4.getSlot().get(0).price() + " there are " + y.c4.getStock() + " left");
         System.out.println(" ");
 
-        startApp(x, y, z);
+//        startApp(x, y, z);
+        buyItem(x, y , z);
     }
 
     private static void buyItem(Customer x,VendingMachine y,BufferedReader z) throws IOException {
@@ -289,14 +290,14 @@ public class App {
         if(a.getStock() < 1){
              outOfStock(y, x, z, a);
         }else if(y.bank.cashCounter < a.getSlot().get(0).price()){
-            notEnoughCredit(y, x);
+            notEnoughCredit(y, x, z);
         }else{
             x.addToPocketAndDeductCash(a.getItemFromSlot());
             y.bank.cashCounter -= a.getSlot().get(0).price();
             x.cash += y.bank.cashCounter;
             System.out.println("*********VENDING MACHINE SOUNDS*********");
             System.out.println("Item bought = " + currentItem);
-            System.out.println("you have been given £" + y.bank.cashCounter + " change");
+            System.out.println("you have been given £" + round(y.bank.cashCounter, 2) + " change");
             y.bank.resetCashCounter();
             a.sale();
         }
@@ -310,10 +311,11 @@ public class App {
         startApp(x, y, z);
     }
 
-    private static void notEnoughCredit(VendingMachine x, Customer y) {
+    private static void notEnoughCredit(VendingMachine x, Customer y, BufferedReader z) throws IOException {
         System.out.println("Not enough, credit, you have been refunded " + round(x.bank.cashCounter, 2));
         y.cash += x.bank.cashCounter;
         x.bank.resetCashCounter();
+        enterCash(y, x, z);
     }
 
 
